@@ -1,3 +1,6 @@
+from ast import Delete
+from http.client import NOT_FOUND
+from lib2to3.pytree import Node
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -23,6 +26,7 @@ class LinkedListDictionary(BaseDictionary):
 
     def __init__(self):
         # TO BE IMPLEMENTED
+        self.head = None
         pass
 
 
@@ -32,6 +36,8 @@ class LinkedListDictionary(BaseDictionary):
         @param words_frequencies: list of (word, frequency) to be stored
         """
         # TO BE IMPLEMENTED
+        for wf in words_frequencies:
+            self.add_word_frequency(words_frequencies[wf])
 
 
     def search(self, word: str) -> int:
@@ -42,6 +48,15 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
+        
+        if (self.head):
+            current = self.head
+            if (current.word_frequency.word == word):
+                return current.word_frequency.frequency
+            while(current.next):
+                current = current.next
+                if(current.word_frequency.word == word):
+                    return current.word_frequency.frequency    
         return 0
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -52,7 +67,18 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
-        return False
+        if (self.search(word_frequency.word) == 0):
+            return False
+
+        newNode = ListNode(word_frequency)
+        if (self.head):
+            current = self.head
+            while(current.next):
+                current = current.next
+            current.next = newNode
+        else:
+            self.head = newNode      
+        return True
 
     def delete_word(self, word: str) -> bool:
         """
@@ -62,6 +88,20 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
+        if (self.search(word_frequency.word) == 0):
+            return False
+        
+        if (self.head):
+            current = self.head
+            if (current.word_frequency.word == word):
+                self.head = None
+                return True
+            while(current.next):
+                previous = current
+                current = current.next
+                if(current.word_frequency.word == word):
+                    previous.next = current.next
+                    return True   
         return False
 
 
