@@ -88,7 +88,7 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
-        if (self.search(word_frequency.word) == 0):
+        if (self.search(word) == 0):
             return False
         
         if (self.head):

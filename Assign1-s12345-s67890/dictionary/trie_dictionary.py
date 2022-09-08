@@ -1,3 +1,6 @@
+from operator import index
+from re import search
+from tkinter import N
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -24,7 +27,8 @@ class TrieDictionary(BaseDictionary):
 
     def __init__(self):
         # TO BE IMPLEMENTED
-        pass
+        self.root = TrieNode()
+        
 
     def build_dictionary(self, words_frequencies: [WordFrequency]):
         """
@@ -32,7 +36,8 @@ class TrieDictionary(BaseDictionary):
         @param words_frequencies: list of (word, frequency) to be stored
         """
         # TO BE IMPLEMENTED
-
+        for wf in words_frequencies:
+            self.add_word_frequency(words_frequencies[wf])
 
     def search(self, word: str) -> int:
         """
@@ -41,8 +46,16 @@ class TrieDictionary(BaseDictionary):
         @return: frequency > 0 if found and 0 if NOT found
         """
         # TO BE IMPLEMENTED
+        node = self.root
 
-        return 0
+        for letter in word:
+            if letter in node.children:
+                node = node.children[letter]
+            else:
+                return 0
+        
+
+        return node.frequency
 
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -54,16 +67,50 @@ class TrieDictionary(BaseDictionary):
 
         # TO BE IMPLEMENTED
 
-        return False
+        node = self.root
 
-    def delete_word(self, word: str) -> bool:
+        for letter in word_frequency.word:
+            if  letter in node.children:
+                node = node.children[letter]
+            else:
+                new_node = TrieNode(letter)
+
+                node.children[letter] = new_node
+                node = new_node
+        node.is_last =True
+        node.frequency = word_frequency.frequency
+
+        return True
+
+    def delete_word(self, word: str, node=None, index = 0) -> bool:
         """
         delete a word from the dictionary
         @param word: word to be deleted
         @return: whether succeeded, e.g. return False when point not found
         """
+        ## if word exists
+        
+        if index == 0:
+            if self.search(word) == 0:
+                return False
+        
+        
+        if node == None:
+            node = self.root
+            
+        if len(word) == index:
+            node.is_last = False
+            return True
 
-        return False
+        letter = word[index]
+        if letter not in node.children:
+            return True
+
+        if self.delete_word(word, node.children[letter], index+1):
+            return True
+
+        node.children.pop(letter)
+        return bool(node.children) or node.is_last 
 
 
     def autocomplete(self, word: str) -> [WordFrequency]:

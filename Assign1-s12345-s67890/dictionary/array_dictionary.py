@@ -36,7 +36,7 @@ class ArrayDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         for i in self :
-            if i == word:
+            if (i == word):
                 return i.frequency
         
         return 0
@@ -49,7 +49,7 @@ class ArrayDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         for i in self:
-            if word_frequency.word == i.word:
+            if (word_frequency.word == i.word):
                 return False
 
         self.append((word_frequency.word, word_frequency.frequency)) 
@@ -64,7 +64,7 @@ class ArrayDictionary(BaseDictionary):
         # find the position of 'word' in the list, if exists, will be at idx-1
         # TO BE IMPLEMENTED
         for w in self:
-            if w.word == word:
+            if (w.word == word):
                 self.pop(self[w])
                 return True
 
