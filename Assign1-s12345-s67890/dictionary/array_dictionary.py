@@ -1,3 +1,4 @@
+from array import array
 from dictionary.word_frequency import WordFrequency
 from dictionary.base_dictionary import BaseDictionary
 import bisect
@@ -14,7 +15,6 @@ import bisect
 class ArrayDictionary(BaseDictionary):
 
     def __init__(self):
-        # TO BE IMPLEMENTED
         pass
 
 
@@ -24,6 +24,10 @@ class ArrayDictionary(BaseDictionary):
         @param words_frequencies: list of (word, frequency) to be stored
         """
         # TO BE IMPLEMENTED
+        a_dictionary = []
+
+        for wf in words_frequencies:
+            a_dictionary.append((words_frequencies[wf].word, words_frequencies[wf].frequency))
 
 
     def search(self, word: str) -> int:
@@ -33,7 +37,10 @@ class ArrayDictionary(BaseDictionary):
         @return: frequency > 0 if found and 0 if NOT found
         """
         # TO BE IMPLEMENTED
-
+        for i in self :
+            if i == word:
+                return i.frequency
+        
         return 0
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -43,8 +50,12 @@ class ArrayDictionary(BaseDictionary):
         :return: True whether succeeded, False when word is already in the dictionary
         """
         # TO BE IMPLEMENTED
+        for i in self:
+            if word_frequency.word == i.word:
+                return False
 
-        return False
+        self.append((word_frequency.word, word_frequency.frequency)) 
+        return True
 
     def delete_word(self, word: str) -> bool:
         """
@@ -54,7 +65,11 @@ class ArrayDictionary(BaseDictionary):
         """
         # find the position of 'word' in the list, if exists, will be at idx-1
         # TO BE IMPLEMENTED
-
+        for w in self:
+            if w.word == word:
+                self.pop(self[w])
+                return True
+                
         return False
 
 
