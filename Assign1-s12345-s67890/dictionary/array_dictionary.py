@@ -24,10 +24,8 @@ class ArrayDictionary(BaseDictionary):
         @param words_frequencies: list of (word, frequency) to be stored
         """
         # TO BE IMPLEMENTED
-        a_dictionary = []
-
         for wf in words_frequencies:
-            a_dictionary.append((words_frequencies[wf].word, words_frequencies[wf].frequency))
+            self.add_word_frequency(self, words_frequencies[wf])
 
 
     def search(self, word: str) -> int:
@@ -69,7 +67,7 @@ class ArrayDictionary(BaseDictionary):
             if w.word == word:
                 self.pop(self[w])
                 return True
-                
+
         return False
 
 
