@@ -1,6 +1,7 @@
 from ast import Delete
 from http.client import NOT_FOUND
 from lib2to3.pytree import Node
+import string
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -27,6 +28,7 @@ class LinkedListDictionary(BaseDictionary):
     def __init__(self):
         # TO BE IMPLEMENTED
         self.head = None
+        self.next = None
         pass
 
 
@@ -113,7 +115,40 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
-        return []
+        wordlist = WordFrequency[3]
+        temp = WordFrequency
+        if (self.head):
+            current = self.head
+            if (current.word_frequency.word.startswith(word)):
+                if current.word_frequency.frequency > wordlist[2]:
+                    wordlist[2] = current.word_frequency
+                    if wordlist[1] < wordlist[2]:
+                        temp = wordlist[1]
+                        wordlist[1] = wordlist[2]
+                        wordlist[2] = temp
+                        if wordlist[0] < wordlist[1]:
+                            temp = wordlist[0]
+                            wordlist[0] = wordlist[1]
+                            wordlist[1] = temp
+            while(current.next):
+                current = current.next
+                if (current.word_frequency.word.startswith(word)):
+                    if current.word_frequency.frequency > wordlist[2]:
+                        wordlist[2] = current.word_frequency
+                        if wordlist[1] < wordlist[2]:
+                            temp = wordlist[1]
+                            wordlist[1] = wordlist[2]
+                            wordlist[2] = temp
+                            if wordlist[0] < wordlist[1]:
+                                temp = wordlist[0]
+                                wordlist[0] = wordlist[1]
+                                wordlist[1] = temp    
+        slist = string[3]
+        i = 0
+        while i < 3:
+            slist[i] = wordlist[i].word
+            i = i+1
+        return slist
 
 
 
