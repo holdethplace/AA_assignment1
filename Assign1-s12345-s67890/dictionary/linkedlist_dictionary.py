@@ -3,6 +3,7 @@ from http.client import NOT_FOUND
 from lib2to3.pytree import Node
 import string
 from tokenize import String
+from typing import List
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -28,17 +29,19 @@ class LinkedListDictionary(BaseDictionary):
 
     def __init__(self):
         # TO BE IMPLEMENTED
+
         self.head = None
         self.next = None
         pass
 
 
-    def build_dictionary(self, words_frequencies: [WordFrequency]):
+    def build_dictionary(self, words_frequencies: List[WordFrequency]):
         """
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
         # TO BE IMPLEMENTED
+        #adds each word frequency in word frequencies 
         for wf in words_frequencies:
             self.add_word_frequency(wf)
 
@@ -52,6 +55,7 @@ class LinkedListDictionary(BaseDictionary):
 
         # TO BE IMPLEMENTED
         
+        #word iterates from the head of the list until it finds the specific word
         current = self.head
         while current:
             if (current.word_frequency.word == word):
@@ -68,10 +72,11 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
+        #if there is no head , create head inside the list
         if (self.head is None):
             self.head = ListNode(word_frequency)
             return True
-
+        #if there is a head add the new node into the list
         newNode = ListNode(word_frequency)
         if (self.head):
             current = self.head
@@ -90,9 +95,10 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
+        #if the word does not exist within the list it returns false
         if (self.search(word) == 0):
             return False
-        
+        #if the word is inside the list, it searches throught the list from the head and deletes the node of the word from the list
         if (self.head):
             current = self.head
             if (current.word_frequency.word == word):
@@ -107,7 +113,7 @@ class LinkedListDictionary(BaseDictionary):
         return False
 
 
-    def autocomplete(self, word: str) -> [WordFrequency]:
+    def autocomplete(self, word: str) -> List[WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'word' as a prefix
         @param word: word to be autocompleted
@@ -115,14 +121,16 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
+
         wordlist = []
+        #a temporary point of the head of the list
         temporary = self.head
         while temporary:
-            
+            #if the word has the prefix/ starting word it adds the word into the result list
             if temporary.word_frequency.word.startswith(word):
                 wordlist.append(temporary.word_frequency)
             temporary = temporary.next
-        
+        #sorts the word list and then returns the top 3 words with the highest frequency
         wordlist.sort(key = lambda word:word.frequency, reverse=True)
         return wordlist[0:3]
 

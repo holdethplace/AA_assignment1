@@ -14,7 +14,7 @@ from dictionary.linkedlist_dictionary import LinkedListDictionary
 from dictionary.trie_dictionary import TrieDictionary
 
 
-
+#reads the word frequency of each word
 
 def readWordList(folder: str, fstr: str) -> List[WordFrequency]:
     data_file = open(folder + fstr, "r")
@@ -28,7 +28,7 @@ def readWordList(folder: str, fstr: str) -> List[WordFrequency]:
         word_list.append(word_frequency)
     return word_list
 
-
+#tests our the operation of each approach by using time.time function and then substract the end - start time of each operation then appending into the list 
 def search_test(data: List[WordFrequency], dictionary: BaseDictionary):
     searches = []
 
@@ -49,15 +49,7 @@ def add_test(data: List[WordFrequency], dictionary: BaseDictionary):
         searches.append(end - start)
     return searches
 
-def delete_test(data: List[WordFrequency], dictionary: BaseDictionary):
-    searches = []
 
-    for d in data:
-        start = time.time() * 1000000000
-        dictionary.delete_word(d.word)
-        end = time.time() * 1000000000
-        searches.append(end - start)
-    return searches
 
 def autocomplete_test(data: List[WordFrequency], dictionary: BaseDictionary):
     searches = []
@@ -72,39 +64,38 @@ def autocomplete_test(data: List[WordFrequency], dictionary: BaseDictionary):
 
 
 if __name__ == "__main__":
-    ## file names
+    ## file names of each generated datasets that was generated from the large sampleData200k.txt file
     files = ["100", "700", "1500", "2750", "5000", "8000", "15000"]
     data = readWordList("", "sampleData200k.txt")
     linked = []
     arr_list = []
     trie_list = []
 
-    for file in files: #benchmark data is the folder the files are in
+    for file in files: #reads the files/ generated datasets from the generation folder inside the dictionary directory
         word_list = readWordList("dictionary/generation/", file)
         arrD = ArrayDictionary()
         llD = LinkedListDictionary()
         trieD = TrieDictionary()
-        result = [arrD, trieD, llD]
+        result = [arrD, llD, trieD]
 
         test_data = word_list
         random.shuffle(test_data)
-        
+        #amounts of test did
         test_ammount = 100
         for i in result:
             i.build_dictionary(word_list)
-
+            
             searches = search_test(test_data[:test_ammount], i)
             searches_result = int(math.fsum(searches) / len(searches))
 
             adds = add_test(test_data[:test_ammount], i)
             add_result = int(math.fsum(adds) / len(adds))
 
-            deletes = delete_test(test_data[:test_ammount], i)
-            deletes_result = int(math.fsum(deletes) / len(deletes))
+
             
             auto = autocomplete_test(test_data[:test_ammount], i)
             auto_result = int(math.fsum(auto) / len(auto))
-
+            #appending each operations and adding all the running time into 1 list
             if type(i) == LinkedListDictionary:
                 linked.append(auto_result)
             if type(i) == ArrayDictionary:
@@ -113,10 +104,12 @@ if __name__ == "__main__":
                 trie_list.append(auto_result)
 
 
+#prints the running time
+print(f" array : {arr_list}")
+print(f" linked : {linked}")
+print(f" trie : {trie_list}")
 
-print(f" array add: {arr_list}")
-print(f" linked add: {linked}")
-print(f" trie add: {trie_list}")
+#creates the graph for comparing the amount of datasets to the running time of each approach/ dictionaries
 plt.plot(files, linked, label="linked list")
 plt.plot(files, arr_list, label="array")
 plt.plot(files, trie_list, label="trie")

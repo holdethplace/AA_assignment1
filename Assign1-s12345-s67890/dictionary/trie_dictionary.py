@@ -1,6 +1,7 @@
 from operator import index
 from re import search
 from tkinter import N
+from typing import List
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -30,7 +31,7 @@ class TrieDictionary(BaseDictionary):
         self.root = TrieNode()
         
 
-    def build_dictionary(self, words_frequencies: [WordFrequency]):
+    def build_dictionary(self, words_frequencies: List[WordFrequency]):
         """
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
@@ -47,11 +48,11 @@ class TrieDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         node = self.root
-
+        #if children node is not inside the root node it returns 0
         for currenthead in word:
             if currenthead not in node.children:
                 return 0
-                
+            #it points the children node as the root node
             node = node.children[currenthead]
             
         
@@ -69,15 +70,14 @@ class TrieDictionary(BaseDictionary):
         # TO BE IMPLEMENTED
 
         node = self.root
-
+        #if the word is already inside the dictionary dont add it into the children node
         for currenthead in word_frequency.word:
             if  (currenthead not in node.children):
                 node.children[currenthead] = TrieNode (letter= currenthead)
             node = node.children[currenthead]
-        
+        # adds the word into the dictionary
         node.frequency = word_frequency.frequency
-        
-        
+
         node.is_last =True
         
         
@@ -90,14 +90,15 @@ class TrieDictionary(BaseDictionary):
         @param word: word to be deleted
         @return: whether succeeded, e.g. return False when point not found
         """
-        ## if word exists
+        
         
         node = self.root
-
+        #if word is not in dictionary returns false
         for currenthead in word:
             if currenthead not in node.children:
                 return False
             node = node.children[currenthead]
+        #deletes the node
         node.frequency = None
         
         node.is_last = False
@@ -108,7 +109,7 @@ class TrieDictionary(BaseDictionary):
 
 
 
-    def autocomplete(self, word: str) -> [WordFrequency]:
+    def autocomplete(self, word: str) -> List[WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'word' as a prefix
         @param word: word to be autocompleted
@@ -117,15 +118,17 @@ class TrieDictionary(BaseDictionary):
         node = self.root
         
         self.result = []
-        
+        #if the words with prefix are not inside the dictionary returns empty list
         for currenthead in word:
             if currenthead not in node.children:
                 return []
+            #adds the words with the prefix inside the list
             node = node.children[currenthead]
         self.depthfirstsearch(node, word[:-1])
-        
+        #sorts the list and returns the top 3 words with the highest frequency
         return sorted(self.result, key =lambda y : y.frequency, reverse=True)[:3]
- 
+    
+    #a method in which it appends the word into the list if the word is in the last node
     def depthfirstsearch(self, node: TrieNode, word: str):
         if node.is_last:
             self.result.append(
