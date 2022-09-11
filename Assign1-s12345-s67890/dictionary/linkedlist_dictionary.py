@@ -120,32 +120,32 @@ class LinkedListDictionary(BaseDictionary):
         if (self.head):
             current = self.head
             if (current.word_frequency.word.startswith(word)):
-                if current.word_frequency.frequency > wordlist[2]:
+                if (current.word_frequency.frequency > wordlist)[2]:
                     wordlist[2] = current.word_frequency
-                    if wordlist[1] < wordlist[2]:
+                    if (wordlist[1] < wordlist[2]):
                         temp = wordlist[1]
                         wordlist[1] = wordlist[2]
                         wordlist[2] = temp
-                        if wordlist[0] < wordlist[1]:
+                        if (wordlist[0] < wordlist[1]):
                             temp = wordlist[0]
                             wordlist[0] = wordlist[1]
                             wordlist[1] = temp
             while(current.next):
                 current = current.next
                 if (current.word_frequency.word.startswith(word)):
-                    if current.word_frequency.frequency > wordlist[2]:
+                    if (current.word_frequency.frequency > wordlist)[2]:
                         wordlist[2] = current.word_frequency
-                        if wordlist[1] < wordlist[2]:
+                        if (wordlist[1] < wordlist)[2]:
                             temp = wordlist[1]
                             wordlist[1] = wordlist[2]
                             wordlist[2] = temp
-                            if wordlist[0] < wordlist[1]:
+                            if (wordlist[0] < wordlist)[1]:
                                 temp = wordlist[0]
                                 wordlist[0] = wordlist[1]
                                 wordlist[1] = temp    
         slist = string[3]
         i = 0
-        while i < 3:
+        while (i < 3):
             slist[i] = wordlist[i].word
             i = i+1
         return slist

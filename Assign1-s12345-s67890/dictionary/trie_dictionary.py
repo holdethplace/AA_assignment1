@@ -70,7 +70,7 @@ class TrieDictionary(BaseDictionary):
         node = self.root
 
         for letter in word_frequency.word:
-            if  letter in node.children:
+            if  (letter in node.children):
                 node = node.children[letter]
             else:
                 new_node = TrieNode(letter)
@@ -90,23 +90,23 @@ class TrieDictionary(BaseDictionary):
         """
         ## if word exists
         
-        if index == 0:
+        if (index == 0):
             if self.search(word) == 0:
                 return False
         
         
-        if node == None:
+        if (node == None):
             node = self.root
             
-        if len(word) == index:
+        if (len(word) == index):
             node.is_last = False
             return True
 
         letter = word[index]
-        if letter not in node.children:
+        if (letter not in node.children):
             return True
 
-        if self.delete_word(word, node.children[letter], index+1):
+        if (self.delete_word(word, node.children[letter], index+1)):
             return True
 
         node.children.pop(letter)
