@@ -92,8 +92,8 @@ class ArrayDictionary(BaseDictionary):
                 return True
             else:
                 return False
-        res = filter(prefix, self.array)
-        return sorted(res, key=lambda y: y.frequency, reverse=True)[:3]
+        result = filter(prefix, self.array)
+        return sorted(result, key=lambda y: y.frequency, reverse=True)[:3]
         
 
 

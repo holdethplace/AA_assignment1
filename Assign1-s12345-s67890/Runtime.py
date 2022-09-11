@@ -1,6 +1,10 @@
 import math
 import time
 import random
+import matplotlib.pyplot as plt
+
+
+
 from typing import List
 
 from dictionary.word_frequency import WordFrequency
@@ -8,6 +12,7 @@ from dictionary.base_dictionary import BaseDictionary
 from dictionary.array_dictionary import ArrayDictionary
 from dictionary.linkedlist_dictionary import LinkedListDictionary
 from dictionary.trie_dictionary import TrieDictionary
+
 
 
 
@@ -68,41 +73,55 @@ def autocomplete_test(data: List[WordFrequency], dictionary: BaseDictionary):
 
 if __name__ == "__main__":
     ## file names
-    files = ["100", "500", "1000", "2500", "5000", "7500", "10000"]
+    files = ["100", "700", "1500", "2750", "5000", "8000", "15000"]
     data = readWordList("", "sampleData200k.txt")
     linked = []
     arr_list = []
     trie_list = []
 
-    for file in files: #benchmarn data is the folder the files are in
-        word_list = readWordList("benchmark-data/", file)
+    for file in files: #benchmark data is the folder the files are in
+        word_list = readWordList("dictionary/generation/", file)
         arrD = ArrayDictionary()
         llD = LinkedListDictionary()
         trieD = TrieDictionary()
-        res = [arrD, trieD, llD]
+        result = [arrD, trieD, llD]
 
         test_data = word_list
         random.shuffle(test_data)
         
         test_ammount = 100
-        for i in res:
+        for i in result:
             i.build_dictionary(word_list)
 
             searches = search_test(test_data[:test_ammount], i)
-            searches_res = int(math.fsum(searches) / len(searches))
+            searches_result = int(math.fsum(searches) / len(searches))
 
             adds = add_test(test_data[:test_ammount], i)
-            add_res = int(math.fsum(adds) / len(adds))
+            add_result = int(math.fsum(adds) / len(adds))
 
             deletes = delete_test(test_data[:test_ammount], i)
-            deltes_res = int(math.fsum(deletes) / len(deletes))
+            deletes_result = int(math.fsum(deletes) / len(deletes))
             
             auto = autocomplete_test(test_data[:test_ammount], i)
-            auto_res = int(math.fsum(auto) / len(auto))
+            auto_result = int(math.fsum(auto) / len(auto))
 
             if type(i) == LinkedListDictionary:
-                linked.append(auto_res)
+                linked.append(auto_result)
             if type(i) == ArrayDictionary:
-                arr_list.append(auto_res)
+                arr_list.append(auto_result)
             if type(i) == TrieDictionary:
-                trie_list.append(auto_res)
+                trie_list.append(auto_result)
+
+
+
+print(f" array add: {arr_list}")
+print(f" linked add: {linked}")
+print(f" trie add: {trie_list}")
+plt.plot(files, linked, label="linked list")
+plt.plot(files, arr_list, label="array")
+plt.plot(files, trie_list, label="trie")
+plt.legend()
+plt.show()
+
+    
+ 
