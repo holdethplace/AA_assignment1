@@ -1,4 +1,5 @@
 from array import array
+from ctypes import sizeof
 from dictionary.word_frequency import WordFrequency
 from dictionary.base_dictionary import BaseDictionary
 import bisect
@@ -24,8 +25,10 @@ class ArrayDictionary(BaseDictionary):
         @param words_frequencies: list of (word, frequency) to be stored
         """
         # TO BE IMPLEMENTED
-        for wf in words_frequencies:
-            self.add_word_frequency(self, words_frequencies[wf])
+        #for wf in words_frequencies:
+            #self.add_word_frequency(wf)
+        
+        self.array = sorted([wordfrequency for wordfrequency in words_frequencies], key=lambda y: y.word)
 
 
     def search(self, word: str) -> int:
@@ -35,9 +38,11 @@ class ArrayDictionary(BaseDictionary):
         @return: frequency > 0 if found and 0 if NOT found
         """
         # TO BE IMPLEMENTED
-        for i in self :
-            if (i == word):
+
+        for i in self.array:
+            if (i.word == word):
                 return i.frequency
+            
         
         return 0
 
@@ -48,12 +53,17 @@ class ArrayDictionary(BaseDictionary):
         :return: True whether succeeded, False when word is already in the dictionary
         """
         # TO BE IMPLEMENTED
-        for i in self:
-            if (word_frequency.word == i.word):
-                return False
 
-        self.append((word_frequency.word, word_frequency.frequency)) 
+
+        
+        
+        if self.search(word_frequency.word) != 0:
+            return False
+
+        
+        bisect.insort_left(self.array, word_frequency, key=lambda y: y.word)
         return True
+        
 
     def delete_word(self, word: str) -> bool:
         """
@@ -63,13 +73,12 @@ class ArrayDictionary(BaseDictionary):
         """
         # find the position of 'word' in the list, if exists, will be at idx-1
         # TO BE IMPLEMENTED
-        for w in self:
-            if (w.word == word):
-                self.pop(self[w])
-                return True
+        index = bisect.bisect_left(self.array, word, key=lambda y: y.word)
+        if index != len(self.array):
+            del self.array[index]
+            return True
 
         return False
-
 
     def autocomplete(self, prefix_word: str) -> [WordFrequency]:
         """
@@ -77,4 +86,19 @@ class ArrayDictionary(BaseDictionary):
         @param prefix_word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'prefix_word'
         """
-        return []
+        def prefix(word_frequency: WordFrequency):
+
+            if word_frequency.word.startswith(prefix_word):
+                return True
+            else:
+                return False
+        res = filter(prefix, self.array)
+        return sorted(res, key=lambda y: y.frequency, reverse=True)[:3]
+        
+
+
+        
+    
+    
+
+        
