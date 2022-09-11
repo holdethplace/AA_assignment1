@@ -37,7 +37,7 @@ class TrieDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         for wf in words_frequencies:
-            self.add_word_frequency(words_frequencies[wf])
+            self.add_word_frequency(wf)
 
     def search(self, word: str) -> int:
         """
@@ -48,14 +48,15 @@ class TrieDictionary(BaseDictionary):
         # TO BE IMPLEMENTED
         node = self.root
 
-        for letter in word:
-            if letter in node.children:
-                node = node.children[letter]
-            else:
+        for currenthead in word:
+            if currenthead not in node.children:
                 return 0
+                
+            node = node.children[currenthead]
+            
         
 
-        return node.frequency
+        return node.frequency if node.frequency else 0
 
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -69,20 +70,21 @@ class TrieDictionary(BaseDictionary):
 
         node = self.root
 
-        for letter in word_frequency.word:
-            if  (letter in node.children):
-                node = node.children[letter]
-            else:
-                new_node = TrieNode(letter)
-
-                node.children[letter] = new_node
-                node = new_node
-        node.is_last =True
+        for currenthead in word_frequency.word:
+            if  (currenthead not in node.children):
+                node.children[currenthead] = TrieNode (letter= currenthead)
+            node = node.children[currenthead]
+        
         node.frequency = word_frequency.frequency
+        
+        
+        node.is_last =True
+        
+        
 
         return True
 
-    def delete_word(self, word: str, node=None, index = 0) -> bool:
+    def delete_word(self, word: str) -> bool:
         """
         delete a word from the dictionary
         @param word: word to be deleted
@@ -90,27 +92,20 @@ class TrieDictionary(BaseDictionary):
         """
         ## if word exists
         
-        if (index == 0):
-            if self.search(word) == 0:
+        node = self.root
+
+        for currenthead in word:
+            if currenthead not in node.children:
                 return False
+            node = node.children[currenthead]
+        node.frequency = None
+        
+        node.is_last = False
         
         
-        if (node == None):
-            node = self.root
-            
-        if (len(word) == index):
-            node.is_last = False
-            return True
+        
+        return True
 
-        letter = word[index]
-        if (letter not in node.children):
-            return True
-
-        if (self.delete_word(word, node.children[letter], index+1)):
-            return True
-
-        node.children.pop(letter)
-        return bool(node.children) or node.is_last 
 
 
     def autocomplete(self, word: str) -> [WordFrequency]:
@@ -119,4 +114,24 @@ class TrieDictionary(BaseDictionary):
         @param word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'word'
         """
-        return []
+        node = self.root
+        
+        self.result = []
+        
+        for currenthead in word:
+            if currenthead not in node.children:
+                return []
+            node = node.children[currenthead]
+        self.depthfirstsearch(node, word[:-1])
+        
+        return sorted(self.result, key =lambda y : y.frequency, reverse=True)[:3]
+ 
+    def depthfirstsearch(self, node: TrieNode, word: str):
+        if node.is_last:
+            self.result.append(
+                WordFrequency(word=word + node.letter, frequency=node.frequency)
+                
+            )
+
+        for child in node.children:
+            self.depthfirstsearch(node.children[child], word + node.letter)  

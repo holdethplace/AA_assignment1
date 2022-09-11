@@ -2,6 +2,7 @@ from ast import Delete
 from http.client import NOT_FOUND
 from lib2to3.pytree import Node
 import string
+from tokenize import String
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
@@ -39,7 +40,7 @@ class LinkedListDictionary(BaseDictionary):
         """
         # TO BE IMPLEMENTED
         for wf in words_frequencies:
-            self.add_word_frequency(words_frequencies[wf])
+            self.add_word_frequency(wf)
 
 
     def search(self, word: str) -> int:
@@ -51,14 +52,12 @@ class LinkedListDictionary(BaseDictionary):
 
         # TO BE IMPLEMENTED
         
-        if (self.head):
-            current = self.head
+        current = self.head
+        while current:
             if (current.word_frequency.word == word):
                 return current.word_frequency.frequency
-            while(current.next):
-                current = current.next
-                if(current.word_frequency.word == word):
-                    return current.word_frequency.frequency    
+            current = current.next
+          
         return 0
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -69,8 +68,9 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
-        if (self.search(word_frequency.word) == 0):
-            return False
+        if (self.head is None):
+            self.head = ListNode(word_frequency)
+            return True
 
         newNode = ListNode(word_frequency)
         if (self.head):
@@ -115,40 +115,16 @@ class LinkedListDictionary(BaseDictionary):
         """
 
         # TO BE IMPLEMENTED
-        wordlist = WordFrequency[3]
-        temp = WordFrequency
-        if (self.head):
-            current = self.head
-            if (current.word_frequency.word.startswith(word)):
-                if (current.word_frequency.frequency > wordlist)[2]:
-                    wordlist[2] = current.word_frequency
-                    if (wordlist[1] < wordlist[2]):
-                        temp = wordlist[1]
-                        wordlist[1] = wordlist[2]
-                        wordlist[2] = temp
-                        if (wordlist[0] < wordlist[1]):
-                            temp = wordlist[0]
-                            wordlist[0] = wordlist[1]
-                            wordlist[1] = temp
-            while(current.next):
-                current = current.next
-                if (current.word_frequency.word.startswith(word)):
-                    if (current.word_frequency.frequency > wordlist)[2]:
-                        wordlist[2] = current.word_frequency
-                        if (wordlist[1] < wordlist)[2]:
-                            temp = wordlist[1]
-                            wordlist[1] = wordlist[2]
-                            wordlist[2] = temp
-                            if (wordlist[0] < wordlist)[1]:
-                                temp = wordlist[0]
-                                wordlist[0] = wordlist[1]
-                                wordlist[1] = temp    
-        slist = string[3]
-        i = 0
-        while (i < 3):
-            slist[i] = wordlist[i].word
-            i = i+1
-        return slist
+        wordlist = []
+        temporary = self.head
+        while temporary:
+            
+            if temporary.word_frequency.word.startswith(word):
+                wordlist.append(temporary.word_frequency)
+            temporary = temporary.next
+        
+        wordlist.sort(key = lambda word:word.frequency, reverse=True)
+        return wordlist[0:3]
 
 
 
